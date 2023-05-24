@@ -20,22 +20,22 @@ B --> C([API Gateway])
 A --> C
 
 C --> D[Microsserviço 1]
-C --> E[Microsserviço 2]
-C --> F[Microsserviço 3]
+C --> E[Microsserviço 3]
+C --> F[Microsserviço 2]
 
 subgraph  Microsserviço 1
 D --> G[(DB SQL)]
 end
 
 subgraph  Microsserviço 2
-E --> H([Serviços Externos])
+F --> H([Serviços Externos])
 end
 
 subgraph  Microsserviço 3
-F --> I[(DB NoSQL)]
+E --> I[(DB NoSQL)]
 end
 
 D -- Publicação --> J[[Fila de Mensagens]]
-J -- Assinatura --> F
+J -- Assinatura --> E
 
 ```
