@@ -1,5 +1,5 @@
 ﻿using API.Application;
-using API.Application.CreditoService;
+using API.Application.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 

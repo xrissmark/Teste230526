@@ -1,10 +1,11 @@
-﻿using API.Domain.Entities;
+﻿using API.Application.Helpers;
+using API.Domain.Entities;
 using API.Domain.Enums;
 using API.Domain.Messages;
 using API.Domain.Responses;
 using System;
 
-namespace API.Application.CreditoService
+namespace API.Application.Service
 {
     public class CreditoService : ICreditoService
     {
@@ -12,32 +13,33 @@ namespace API.Application.CreditoService
         {
             var response = new LiberacaoCreditoResponse();
 
-            if (pedidoCredito.Valor > 1000000)
+            if (pedidoCredito.Valor > ValidacaoCreditoHelper.CREDITO_MAXVALUE)
             {
                 response.Mensagem = MensagemErro.CREDITO_VALOR_SUPERIOR_PERMITIDO;
                 return response;
-            }                
+            }
 
-            if (pedidoCredito.QtdParcelas < 5 || pedidoCredito.QtdParcelas > 72)
+            if (pedidoCredito.QtdParcelas < ValidacaoCreditoHelper.CREDITO_QTD_PARCELAS_MIN || 
+                pedidoCredito.QtdParcelas > ValidacaoCreditoHelper.CREDITO_QTD_PARCELAS_MAX)
             {
                 response.Mensagem = MensagemErro.CREDITO_NUMERO_PARCELAS;
                 return response;
             }
 
-            if (pedidoCredito.Tipo == TipoCreditoEnum.PessoaJuridica && pedidoCredito.Valor < 15000)
+            if (pedidoCredito.Tipo == TipoCreditoEnum.PessoaJuridica && pedidoCredito.Valor < ValidacaoCreditoHelper.CREDITO_PJ_MINVALUE)
             {
                 response.Mensagem = MensagemErro.CREDITO_VALOR_INFERIOR_PJ;
                 return response;
             }
 
-            if ((pedidoCredito.DataPrimeiroVencimento - DateTime.Now).TotalDays < 15 || 
-                (pedidoCredito.DataPrimeiroVencimento - DateTime.Now).TotalDays > 40)
+            if ((pedidoCredito.DataPrimeiroVencimento - DateTime.Now).TotalDays < ValidacaoCreditoHelper.CREDITO_DT_VENCIMENTO_MIN || 
+                (pedidoCredito.DataPrimeiroVencimento - DateTime.Now).TotalDays > ValidacaoCreditoHelper.CREDITO_DT_VENCIMENTO_MAX)
             {
                 response.Mensagem = MensagemErro.CREDITO_DATA_PRIMEIRO_VENCIMENTO;
                 return response;
             }
 
-            CalcularJuros(pedidoCredito, ref response);            
+            CalcularJuros(pedidoCredito, ref response);
 
             return response;
         }
