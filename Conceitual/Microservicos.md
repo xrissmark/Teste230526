@@ -36,6 +36,6 @@ F --> I[(DB NoSQL)]
 end
 
 D -- Publicação --> J[[Fila de Mensagens]]
-J -- Inscrição --> F
+J -- Assinatura --> F
 
 ```
